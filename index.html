@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Talimatlar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        
+        :root {
+            --background-color: #ffffff;
+            --text-color: #111827;
+            --highlight-color: #22c55e;
+            --step-border-color: #d1d5db;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100dvh;
+            margin: 0;
+            padding: 25px;
+            box-sizing: border-box;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        body.rtl { direction: rtl; }
+
+        .popup-container {
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+        }
+        
+        body.rtl .popup-container { text-align: right; }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 30px 0;
+            line-height: 1.4;
+        }
+
+        .steps {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            counter-reset: steps-counter;
+        }
+
+        .steps li {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .steps li::before {
+            counter-increment: steps-counter;
+            content: counter(steps-counter);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--step-border-color);
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        body.rtl .steps li::before {
+            margin-right: 0;
+            margin-left: 15px;
+        }
+
+        .highlight {
+            color: var(--highlight-color);
+            font-weight: 700;
+        }
+        
+        .arrow-container {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            width: 30px;
+            height: 30px;
+        }
+
+        body.rtl .arrow-container {
+            right: auto;
+            left: 25px;
+        }
+
+        .arrow {
+            width: 15px;
+            height: 15px;
+            border-left: 3px solid #cccccc;
+            border-top: 3px solid #cccccc;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            opacity: 0;
+            animation: animate-arrow 2s infinite ease-out;
+        }
+        
+        body.rtl .arrow { transform: translate(-50%, -50%) rotate(-135deg); }
+
+        .arrow:nth-child(2) { animation-delay: -0.5s; }
+        .arrow:nth-child(3) { animation-delay: -1s; }
+
+        @keyframes animate-arrow {
+            0% { opacity: 0; transform: translate(-50%, 0%) rotate(45deg); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translate(-50%, -100%) rotate(45deg); }
+        }
+        
+        @keyframes animate-arrow-rtl {
+             0% { opacity: 0; transform: translate(-50%, 0%) rotate(-135deg); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translate(-50%, -100%) rotate(-135deg); }
+        }
+        body.rtl .arrow { animation-name: animate-arrow-rtl; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="arrow-container">
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+        </div>
+
+        <div class="popup-container">
+            <h1 data-key="main_title"></h1>
+            <ol class="steps">
+                <li data-key="step1"></li>
+                <li data-key="step2"></li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // DİL ÇEVİRİLERİ - DEĞİŞİKLİK BURADA
+            const translations = {
+                'tr': { main_title: 'Bağlantıya erişmek için şu iki basit adımı izleyin:', step1: 'Sağ üstteki<strong> ••• </strong>simgesine tıklayın', step2: 'Ardından <span class="highlight">"Tarayıcıda Aç"</span> seçeneğine dokunun' },
+                'en': { main_title: 'To access the link, follow these two simple steps:', step1: 'Click on<strong> ••• </strong>in the top right', step2: 'Then tap <span class="highlight">"Open in Browser"</span>' },
+                'es': { main_title: 'Para acceder al enlace, sigue estos dos simples pasos:', step1: 'Haz clic en<strong> ••• </strong>arriba a la derecha', step2: 'Luego pulsa <span class="highlight">"Abrir en el navegador"</span>' },
+                'de': { main_title: 'Befolge diese zwei einfachen Schritte, um auf den Link zuzugreifen:', step1: 'Klicke auf<strong> ••• </strong>oben rechts', step2: 'Tippe dann auf <span class="highlight">„Im Browser öffnen“</span>' },
+                'fr': { main_title: 'Pour accéder au lien, suis ces deux étapes simples :', step1: 'Cliquez sur<strong> ••• </strong>en haut à droite', step2: 'Puis <span class="highlight">"Ouvrir dans le navigateur"</span>' },
+                'pt': { main_title: 'Para acessar o link, siga estes dois passos simples:', step1: 'Clique em<strong> ••• </strong>no canto superior direito', step2: 'Depois toque em <span class="highlight">"Abrir no navegador"</span>' },
+                'ru': { main_title: 'Чтобы получить доступ к ссылке, выполните эти два простых шага:', step1: 'Нажмите на<strong> ••• </strong>в правом верхнем углу', step2: 'Затем нажмите <span class="highlight">«Открыть в браузере»</span>' },
+                'ar': { main_title: 'للوصول إلى الرابط، اتبع هاتين الخطوتين البسيطتين:', step1: 'انقر على<strong> ••• </strong>في أعلى اليسار', step2: ' ثم اضغط على <span class="highlight">"فتح في المتصفح"</span>' },
+                'hi': { main_title: 'लिंक तक पहुंचने के लिए, इन दो सरल चरणों का पालन करें:', step1: 'ऊपर दाईं ओर<strong> ••• </strong>पर क्लिक करें', step2: 'फिर <span class="highlight">"ब्राउज़र में खोलें"</span> पर टैप करें' },
+                'zh': { main_title: '请按照以下两个简单步骤访问链接：', step1: '点击右上角的<strong> ••• </strong>', step2: '然后点击<span class="highlight">“在浏览器中打开”</span>' },
+                'ja': { main_title: 'リンクにアクセスするには、次の2つの簡単な手順に従ってください：', step1: '右上の<strong> ••• </strong>をクリックします', step2: '次に<span class="highlight">「ブラウザで開く」</span>をタップします' }
+            };
+
+            const userLang = navigator.language.slice(0, 2);
+            const lang = translations[userLang] || translations['tr'];
+            if (userLang === 'ar') document.body.classList.add('rtl');
+            
+            document.querySelectorAll('[data-key]').forEach(elem => { elem.innerHTML = lang[elem.dataset.key]; });
+
+            // YÖNLENDİRME MANTIĞI
+            const iosUrl = 'http://apps.apple.com/tr/app/diksiyonist/id6747145035';
+            const androidUrl = 'http://play.google.com/store/apps/details?id=com.sozensoftware.diksiyonist';
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            let targetUrl = androidUrl;
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                targetUrl = iosUrl;
+            }
+
+            window.location.href = targetUrl;
+
+        })();
+    </script>
+</body>
+</html>
