@@ -155,7 +155,7 @@
 
     <script>
         (function() {
-            // DİL ÇEVİRİLERİ
+            // DİL ÇEVİRİLERİ - DEĞİŞİKLİK BURADA
             const translations = {
                 'tr': { main_title: 'Bağlantıya erişmek için şu iki basit adımı izleyin:', step1: 'Sağ üstteki<strong> ••• </strong>simgesine tıklayın', step2: 'Ardından <span class="highlight">"Tarayıcıda Aç"</span> seçeneğine dokunun' },
                 'en': { main_title: 'To access the link, follow these two simple steps:', step1: 'Click on<strong> ••• </strong>in the top right', step2: 'Then tap <span class="highlight">"Open in Browser"</span>' },
@@ -176,26 +176,17 @@
             
             document.querySelectorAll('[data-key]').forEach(elem => { elem.innerHTML = lang[elem.dataset.key]; });
 
-            // YÖNLENDİRME MANTIĞI - TIKTOK KONTROLÜ EKLENDİ
+            // YÖNLENDİRME MANTIĞI
             const iosUrl = 'http://apps.apple.com/tr/app/diksiyonist/id6747145035';
             const androidUrl = 'http://play.google.com/store/apps/details?id=com.sozensoftware.diksiyonist';
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            
-            const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-            const isTikTok = userAgent.indexOf('TikTok') > -1;
-
             let targetUrl = androidUrl;
-            if (isIOS) {
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                 targetUrl = iosUrl;
             }
 
-            // Eğer kullanıcı iOS'ta ve TikTok'un içindeyse, otomatik yönlendirme yapma.
-            // Bu, kullanıcının talimatları görmesini ve manuel olarak Safari'de açmasını sağlar.
-            if (isIOS && isTikTok) {
-                // Otomatik yönlendirme yapma
-            } else {
-                window.location.href = targetUrl;
-            }
+            window.location.href = targetUrl;
 
         })();
     </script>
